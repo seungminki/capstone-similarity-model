@@ -1,5 +1,6 @@
 from chromadb import Documents, EmbeddingFunction, Embeddings
 from sentence_transformers import SentenceTransformer
+
 import os
 
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
