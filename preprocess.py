@@ -1,9 +1,9 @@
 from soynlp.normalizer import repeat_normalize, emoticon_normalize
+
+from utils.s3_util import download_from_s3_if_not_exists
+
 import re
 import pandas as pd
-
-input_path = ""
-output_path = "output.json"
 
 pattern = re.compile(r"[^가-힣ㄱ-ㅎㅏ-ㅣa-zA-Z\s]")  # 한글, 영어
 
@@ -15,8 +15,19 @@ email_pattern = re.compile(r"\b[\w\.-]+@[\w\.-]+\.\w+\b")
 space_pattern = re.compile(r"\s+")
 
 
-def load_and_preprocess():
-    df = pd.read_json(input_path, lines=True)
+def load_data(s3_file_path: str) -> pd.DataFrame:
+    download_from_s3_if_not_exists(
+        local_dir="./",
+        local_filename=s3_file_path,
+        s3_key="raw/raw_output.json",
+    )
+    return pd.read_json(s3_file_path, lines=True)
+
+
+def preprocess(df: pd.DataFrame):
+    df = df.rename(columns={"post_code": "post_id"})
+    df = df.rename(columns={"board_code": "board_id"})
+    df = df.dropna(subset=["post_id", "board_id"])
 
     df["text"] = df["text"].apply(clean)
     df = df[df["text"].str.len() > 3]
@@ -41,13 +52,6 @@ def clean(x):
     return x
 
 
-if __name__ == "__main__":
-    df = load_and_preprocess()
-    df.info()
-
-    df.to_json(
-        output_path,
-        orient="records",
-        lines=True,
-        force_ascii=False,
-    )
+def generate_doc_ids(df):
+    df["id"] = df.apply(lambda row: f"doc_{row['post_id']}_{row['board_id']}", axis=1)
+    return df
