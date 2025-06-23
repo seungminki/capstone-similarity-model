@@ -3,9 +3,11 @@ from sentence_transformers import SentenceTransformer
 
 import os
 
+from settings import ST_MODEL_NAME
+
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-model = SentenceTransformer("jhgan/ko-sroberta-multitask")
+model = SentenceTransformer(ST_MODEL_NAME)
 
 
 class CustomEmbeddingFunction(EmbeddingFunction):

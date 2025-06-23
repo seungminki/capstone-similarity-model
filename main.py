@@ -3,11 +3,10 @@ import pandas as pd
 from preprocess import load_data, preprocess, generate_doc_ids
 from utils.chroma_util import get_collection, store_embeddings
 
-from settings import CHROMA_COLLECTION_NAME, CHROMA_HOST, CHROMA_PORT
-from settings import s3_file_path
+from settings import CHROMA_COLLECTION_NAME, CHROMA_HOST, CHROMA_PORT, S3_FILE_PATH
 
 # load_data
-df = load_data(s3_file_path)
+df = load_data(S3_FILE_PATH)
 
 # preprocess
 df = preprocess(df)

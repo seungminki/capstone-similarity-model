@@ -11,4 +11,6 @@ CHROMA_COLLECTION_NAME = "capstone_0519"
 CHROMA_HOST = os.getenv("chroma_host")
 CHROMA_PORT = os.getenv("chroma_port")
 
-s3_file_path = "raw_output.json"
+ST_MODEL_NAME = "jhgan/ko-sroberta-multitask"
+
+S3_FILE_PATH = "raw_output.json"
